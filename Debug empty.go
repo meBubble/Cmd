@@ -4,7 +4,7 @@
 package main
 
 import (
-	"github.com/PeernetOfficial/core/webapi"
+    "github.com/newinfoOffical/core/webapi"
 )
 
 func attachDebugAPI(api *webapi.WebapiInstance) {
