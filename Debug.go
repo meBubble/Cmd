@@ -12,73 +12,73 @@ Debug runtime functionality. The functions only work if the config setting Debug
 package main
 
 import (
-    "net/http"
-    "net/http/pprof" // Warning: If the default HTTP handler is used, this installs handlers!
-    "runtime"
+	"net/http"
+	"net/http/pprof" // Warning: If the default HTTP handler is used, this installs handlers!
+	"runtime"
 
-    "github.com/newinfoOffical/core/webapi"
+	"github.com/meBubble/core/webapi"
 )
 
 // apiDebugBugcheck handles /debug/bugcheck
 func apiDebugBugcheck(w http.ResponseWriter, r *http.Request) {
 
-    if !config.DebugAPI {
-        http.Error(w, "", http.StatusOK)
-        return
-    }
+	if !config.DebugAPI {
+		http.Error(w, "", http.StatusOK)
+		return
+	}
 
-    http.Error(w, "Executing immediate bugcheck", http.StatusOK)
+	http.Error(w, "Executing immediate bugcheck", http.StatusOK)
 
-    panic("via /debug/bugcheck")
+	panic("via /debug/bugcheck")
 }
 
 // apiDebugStack handles /debug/stack
 func apiDebugStack(w http.ResponseWriter, r *http.Request) {
 
-    if !config.DebugAPI {
-        http.Error(w, "", http.StatusOK)
-        return
-    }
+	if !config.DebugAPI {
+		http.Error(w, "", http.StatusOK)
+		return
+	}
 
-    buffer := make([]byte, 1*1024*1024)
-    size := runtime.Stack(buffer, true)
+	buffer := make([]byte, 1*1024*1024)
+	size := runtime.Stack(buffer, true)
 
-    http.Error(w, string(buffer[:size]), http.StatusOK)
+	http.Error(w, string(buffer[:size]), http.StatusOK)
 }
 
 func attachDebugAPI(api *webapi.WebapiInstance) {
-    api.AllowKeyInParam = append(api.AllowKeyInParam, []string{
-        "/debug/bugcheck",
-        "/debug/stack",
-        "/debug/pprof",
-        "/debug/pprof/cmdline",
-        "/debug/pprof/profile",
-        "/debug/pprof/symbol",
-        "/debug/pprof/trace",
-        "/debug/pprof/goroutine",
-        "/debug/pprof/heap",
-        "/debug/pprof/threadcreate",
-        "/debug/pprof/block",
-        "/debug/pprof/allocs",
-        "/debug/pprof/mutex",
-    }...)
+	api.AllowKeyInParam = append(api.AllowKeyInParam, []string{
+		"/debug/bugcheck",
+		"/debug/stack",
+		"/debug/pprof",
+		"/debug/pprof/cmdline",
+		"/debug/pprof/profile",
+		"/debug/pprof/symbol",
+		"/debug/pprof/trace",
+		"/debug/pprof/goroutine",
+		"/debug/pprof/heap",
+		"/debug/pprof/threadcreate",
+		"/debug/pprof/block",
+		"/debug/pprof/allocs",
+		"/debug/pprof/mutex",
+	}...)
 
-    api.Router.HandleFunc("/debug/bugcheck", apiDebugBugcheck)
-    api.Router.HandleFunc("/debug/stack", apiDebugStack)
+	api.Router.HandleFunc("/debug/bugcheck", apiDebugBugcheck)
+	api.Router.HandleFunc("/debug/stack", apiDebugStack)
 
-    api.Router.HandleFunc("/debug/pprof", pprof.Index)
-    api.Router.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-    api.Router.HandleFunc("/debug/pprof/profile", pprof.Profile)
-    api.Router.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-    api.Router.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	api.Router.HandleFunc("/debug/pprof", pprof.Index)
+	api.Router.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	api.Router.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	api.Router.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	api.Router.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
-    // Manually add support for paths linked to by index page at /debug/pprof/
-    api.Router.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
-    api.Router.Handle("/debug/pprof/heap", pprof.Handler("heap"))
-    api.Router.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
-    api.Router.Handle("/debug/pprof/block", pprof.Handler("block"))
-    api.Router.Handle("/debug/pprof/allocs", pprof.Handler("allocs"))
-    api.Router.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
+	// Manually add support for paths linked to by index page at /debug/pprof/
+	api.Router.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+	api.Router.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+	api.Router.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+	api.Router.Handle("/debug/pprof/block", pprof.Handler("block"))
+	api.Router.Handle("/debug/pprof/allocs", pprof.Handler("allocs"))
+	api.Router.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
 }
 
 /*

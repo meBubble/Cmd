@@ -4,7 +4,7 @@
 package main
 
 import (
-    "github.com/newinfoOffical/core/webapi"
+	"github.com/meBubble/core/webapi"
 )
 
 func attachDebugAPI(api *webapi.WebapiInstance) {

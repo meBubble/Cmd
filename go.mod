@@ -1,12 +1,12 @@
-module github.com/newinfoOffical/Cmd
+module github.com/meBubble/Cmd
 
 go 1.18
 
 require (
-	github.com/PeernetOfficial/core v0.0.0-20221101165801-6989ef4a19c5
+
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
-	github.com/newinfoOffical/core v0.0.0-20240118125730-a16b13ac0607
+
 )
 
 require (
